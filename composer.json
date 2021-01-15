@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_name/:package_name",
-    "description": ":package_description",
+    "name": "hashmatwaziri/laravel-multi-auth-impersonate",
+    "description": "laravel-multi-auth-impersonate",
     "keywords": [
-        ":vendor_name",
-        ":package_name"
+        "HashmatWaziri",
+        "laravel-multi-auth-impersonate"
     ],
-    "homepage": "https://github.com/:vendor_name/:package_name",
+    "homepage": "https://github.com/HashmatWaziri/laravel-multi-auth-impersonate",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": ":author_homepage",
+            "name": "Hashmat Waziri",
+            "email": "afghan.waziri0@gmail.com",
+            "homepage": "https://hashmatwaziri.com",
             "role": "Developer"
         }
     ],
@@ -25,13 +25,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src",
-            "Spatie\\Skeleton\\Database\\Factories\\": "database/factories"
+            "HashmatWaziri\\LaravelMultiAuthImpersonate\\": "src",
+            "HashmatWaziri\\LaravelMultiAuthImpersonate\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Tests\\": "tests"
+            "HashmatWaziri\\LaravelMultiAuthImpersonate\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -45,10 +45,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Spatie\\Skeleton\\SkeletonServiceProvider"
+                "HashmatWaziri\\LaravelMultiAuthImpersonate\\LaravelMultiAuthImpersonateServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "Spatie\\Skeleton\\SkeletonFacade"
+                "LaravelMultiAuthImpersonate": "HashmatWaziri\\LaravelMultiAuthImpersonate\\LaravelMultiAuthImpersonateFacade"
             }
         }
     },
@@ -57,11 +57,11 @@
     "funding": [
         {
             "type": "github",
-            "url": "https://github.com/sponsors/:vendor_name"
+            "url": "https://github.com/sponsors/HashmatWaziri"
         },
         {
             "type": "other",
-            "url": ":author_homepage"
+            "url": "https://hashmatwaziri.com"
         }
     ]
 }
