@@ -2,9 +2,17 @@
     "name": "hashmatwaziri/laravel-multi-auth-impersonate",
     "description": "laravel-multi-auth-impersonate",
     "keywords": [
-        "HashmatWaziri",
-        "laravel-multi-auth-impersonate"
+        "laravel",
+        "laravel-multi-auth-impersonate",
+        "impersonate",
+        "impersonation",
+        "auth",
+        "MultiAuth",
+        "laravel-package"
+
+
     ],
+
     "homepage": "https://github.com/HashmatWaziri/laravel-multi-auth-impersonate",
     "license": "MIT",
     "authors": [

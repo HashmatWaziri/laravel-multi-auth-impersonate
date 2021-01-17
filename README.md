@@ -5,15 +5,11 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/HashmatWaziri/laravel-multi-auth-impersonate.svg?style=flat-square)](https://packagist.org/packages/HashmatWaziri/laravel-multi-auth-impersonate)
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
-## Support us
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/package-laravel-multi-auth-impersonate-laravel.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/package-laravel-multi-auth-impersonate-laravel)
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+## Requirements
+- Php > 7.3 or 8
 
 ## Installation
 
@@ -23,12 +19,7 @@ You can install the package via composer:
 composer require HashmatWaziri/laravel-multi-auth-impersonate
 ```
 
-You can publish and run the migrations with:
 
-```bash
-php artisan vendor:publish --provider="HashmatWaziri\LaravelMultiAuthImpersonate\LaravelMultiAuthImpersonateServiceProvider" --tag="migrations"
-php artisan migrate
-```
 
 You can publish the config file with:
 ```bash
@@ -39,14 +30,148 @@ This is the contents of the published config file:
 
 ```php
 return [
+ /**
+     * The session key used to store the original user id.
+     */
+    'session_key' => 'impersonated_by',
+
+    /**
+     * The session key used to stored the original user guard.
+     */
+    'session_guard' => 'impersonator_guard',
+
+    /**
+     * The session key used to stored what guard is impersonator using.
+     */
+    'session_guard_using' => 'impersonator_guard_using',
+
+    /**
+     * The default impersonator guard used.
+     */
+    'default_impersonator_guard' => 'web',
 ];
 ```
 
 ## Usage
 
+
+Impersonate a user:
 ```php
-$laravel-multi-auth-impersonate = new HashmatWaziri\LaravelMultiAuthImpersonate();
-echo $laravel-multi-auth-impersonate->echoPhrase('Hello, HashmatWaziri!');
+$other_user = App\Student::find(1);
+Auth::user()->impersonate($other_user);
+// You're now logged as the $other_user
+```
+
+Leave impersonation:
+```php
+Auth::user()->leaveImpersonation();
+// You're now logged as your original user.
+```
+
+### Using the built-in controller
+
+In your routes file, under web middleware, you must call the `impersonate` route macro.
+
+```php
+Route::impersonate();
+```
+
+Alternatively, you can execute this macro with your `RouteServiceProvider`.
+
+```php
+namespace App\Providers;
+
+class RouteServiceProvider extends ServiceProvider
+{
+    public function map() {
+	// here you can supply an array of guards ex ['web','employee','etc']
+        Route::middleware('web')->group(function (Router $router) {
+            $router->impersonate();
+        });
+    }
+}
+```
+
+```php
+// Where $id is the ID of the user you want impersonate
+route('impersonate', $id)
+
+// You should also add `guardName`
+route('impersonate', ['id' => $id, 'guardName' => 'admin'])
+
+// Generate an URL to leave current impersonation
+route('impersonate.leave')
+
+```
+### Defining impersonation authorization
+
+By default all users can **impersonate** an user.  
+You need to add the method `canImpersonate()` to your guard model:
+example:
+```php
+  class User extends Authenticatable implements MustVerifyEmail
+{
+
+    use Notifiable,Impersonate;
+
+
+//    /**
+//     * @return bool
+//     */
+    public function canImpersonate()
+    {
+
+        return true ;
+
+    }
+
+}
+```
+
+By default all users can **be impersonated**.  
+You need to add the method `canBeImpersonated()` to your guard model to extend this behavior:
+
+```php
+    /**
+     * @return bool
+     */
+    public function canBeImpersonated()
+    {
+        // For example
+        return $this->can_be_impersonated == 1;
+    }
+```
+
+### Using your own strategy
+
+- Getting the manager:
+```php
+// With the app helper
+app('impersonate')
+// Dependency Injection
+public function impersonate(ImpersonateManager $manager, $user_id) { /* ... */ }
+```
+
+- Working with the manager:
+
+```php
+
+$manager = app('impersonate');
+
+// Find an user by its ID
+$manager->findUserById($id);
+
+// TRUE if your are impersonating an user.
+$manager->isImpersonating();
+
+// Impersonate an user. Pass the original user and the user you want to impersonate
+$manager->take($from, $to);
+
+// Leave current impersonation
+$manager->leave();
+
+// Get the impersonator ID
+$manager->getImpersonatorId();
 ```
 
 ## Testing
@@ -69,7 +194,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [HashmatWaziri](https://github.com/Hashmat)
+- [HashmatWaziri](https://github.com/HashmatWaziri)
 - [All Contributors](../../contributors)
 
 ## License
