@@ -44,15 +44,15 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/' . $this->configName . '.php' => config_path('laravel-multi-auth-impersonate'),
-            ], 'config');
+                __DIR__ . '/../config/' . $this->configName . '.php' => config_path($this->configName . '.php'),
+            ], 'multiAuthImpersonate');
 
 
 
         }
 
 
-            $this->publishConfig();
+//            $this->publishConfig();
 
         // We want to remove data from storage on real login and logout
         Event::listen(Login::class, function ($event) {
@@ -118,11 +118,11 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
     {
         $router = $this->app['router'];
 
-        $router->macro('impersonate', function () use ($router) {
-            $router->get('/impersonate/take/{id}/{guardName?}',
-                '\Lab404\Impersonate\Controllers\ImpersonateController@take')->name('impersonate');
-            $router->get('/impersonate/leave',
-                '\Lab404\Impersonate\Controllers\ImpersonateController@leave')->name('impersonate.leave');
+        $router->macro('multiAuthImpersonate', function () use ($router) {
+            $router->get('/multiAuthImpersonate/take/{id}/{guardName?}',
+                '\HashmatWaziri\LaravelMultiAuthImpersonate\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
+            $router->get('/multiAuthImpersonate/leave',
+                '\HashmatWaziri\LaravelMultiAuthImpersonate\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
         });
 
     }

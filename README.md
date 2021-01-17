@@ -23,7 +23,7 @@ composer require HashmatWaziri/laravel-multi-auth-impersonate
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="HashmatWaziri\LaravelMultiAuthImpersonate\LaravelMultiAuthImpersonateServiceProvider" --tag="config"
+php artisan vendor:publish --provider="HashmatWaziri\LaravelMultiAuthImpersonate\LaravelMultiAuthImpersonateServiceProvider" --tag="multiAuthImpersonate"
 ```
 
 This is the contents of the published config file:
@@ -51,6 +51,48 @@ return [
     'default_impersonator_guard' => 'web',
 ];
 ```
+
+### Redirect URLs
+
+**take Redirect** : when impersonating another user, you can add the method  `takeRedirectTo()` to your model which is being impersonated:
+
+example:
+```php
+  class User extends Authenticatable implements MustVerifyEmail
+{
+
+    use Notifiable,Impersonate;
+
+
+
+    public static function takeRedirectTo(){
+
+        return url('/after-login');
+    }
+
+}
+```
+
+
+**leave Redirect** : when an impersonator ( the one who impersonated or logged in as another user) is leaving the impersonation, you can add the method  `leaveRedirectTo()` to your model:
+
+example:
+```php
+  class User extends Authenticatable implements MustVerifyEmail
+{
+
+    use Notifiable,Impersonate;
+
+
+
+    public static function leaveRedirectTo(){
+
+        return url('/dashboard');
+    }
+
+}
+```
+
 
 ## Usage
 
