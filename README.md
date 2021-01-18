@@ -128,7 +128,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map() {
 	// here you can supply an array of guards ex ['web','employee','etc']
         Route::middleware('web')->group(function (Router $router) {
-            $router->impersonate();
+            $router->multiAuthImpersonate();
         });
     }
 }
