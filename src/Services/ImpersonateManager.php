@@ -176,6 +176,7 @@ class ImpersonateManager
         session()->forget($this->getSessionKey());
         session()->forget($this->getSessionGuard());
         session()->forget($this->getSessionGuardUsing());
+        session()->forget($this->getImpersonatedId());
     }
 
     public function getSessionKey(): string
@@ -184,6 +185,7 @@ class ImpersonateManager
     }
     public function getImpersonatedId(): string
     {
+        // return impersonated_id
         return config('laravel-multi-auth-impersonate.impersonated_key');
     }
 
@@ -206,13 +208,15 @@ class ImpersonateManager
         return  session()->get('guardName') ?? config('laravel-multi-auth-impersonate.default_impersonator_guard');
     }
 
-    public function getTakeRedirectTo(): string
+    public function getTakeRedirectTo($userToImpersonate): string
     {
+
+
         try {
-            $impersonator = $this->findUserById($this->getImpersonatedId(), $this->getImpersonatedGuardName());
-            $uri = $impersonator::takeRedirectTo();
+
+            $uri = $userToImpersonate::takeRedirectTo();
         } catch (\InvalidArgumentException $e) {
-            $uri = $impersonator::takeRedirectTo();
+            $uri = $userToImpersonate::takeRedirectTo();
         }
 
         return $uri;
@@ -224,7 +228,9 @@ class ImpersonateManager
 
             $impersonator = $this->findUserById($this->getImpersonatorId(), $this->getImpersonatorGuardName());
 
+
             $uri = $impersonator::leaveRedirectTo();
+
         } catch (\InvalidArgumentException $e) {
             $uri = $impersonator::leaveRedirectTo();
         }

@@ -50,7 +50,6 @@ class ImpersonateController extends Controller
 
 
 
-
         if (!$request->user($this->manager->getCurrentAuthGuardName())->canImpersonate()) {
 
             abort(403);
@@ -61,8 +60,10 @@ class ImpersonateController extends Controller
 
 
         if ($userToImpersonate->canBeImpersonated()) {
+
             if ($this->manager->take($request->user($this->manager->getCurrentAuthGuardName()), $userToImpersonate, $guardName)) {
-                $takeRedirect = $this->manager->getTakeRedirectTo();
+                $takeRedirect = $this->manager->getTakeRedirectTo($userToImpersonate);
+
                 if ($takeRedirect !== 'back') {
                     return redirect()->to($takeRedirect);
                 }
