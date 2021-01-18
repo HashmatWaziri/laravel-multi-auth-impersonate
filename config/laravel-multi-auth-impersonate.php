@@ -8,10 +8,14 @@ return [
     'session_key' => 'impersonated_by',
 
     /**
-     * The session key used to stored the original user guard.
+     * The session guard used to stored the original user guard.
      */
     'session_guard' => 'impersonator_guard',
 
+    /**
+     * The impersonated guard used to store the impersonated user guard.
+     */
+    'impersonated_guard' => 'impersonated_guard',
     /**
      * The session key used to stored what guard is impersonator using.
      */
@@ -21,6 +25,11 @@ return [
      * The default impersonator guard used.
      */
     'default_impersonator_guard' => 'web',
+
+    /**
+     * The default impersonator guard used.
+     */
+    'impersonated_key' => 'impersonated_id',
 
 
 

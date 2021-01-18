@@ -99,6 +99,14 @@ class ImpersonateManager
     /**
      * @return string|null
      */
+    public function getImpersonatedGuardName()
+    {
+        return session($this->getImpersonatedGuard(), null);
+    }
+
+    /**
+     * @return string|null
+     */
     public function getImpersonatorGuardUsingName()
     {
         return session($this->getSessionGuardUsing(), null);
@@ -117,7 +125,9 @@ class ImpersonateManager
         try {
             $currentGuard = $this->getCurrentAuthGuardName();
             session()->put($this->getSessionKey(), $from->getAuthIdentifier());
+            session()->put($this->getImpersonatedId(), $to->getAuthIdentifier());
             session()->put($this->getSessionGuard(), $currentGuard);
+            session()->put($this->getImpersonatedGuard(), $guardName);
             session()->put($this->getSessionGuardUsing(), $guardName);
 
 
@@ -172,10 +182,18 @@ class ImpersonateManager
     {
         return config('laravel-multi-auth-impersonate.session_key');
     }
+    public function getImpersonatedId(): string
+    {
+        return config('laravel-multi-auth-impersonate.impersonated_key');
+    }
 
     public function getSessionGuard(): string
     {
         return config('laravel-multi-auth-impersonate.session_guard');
+    }
+    public function getImpersonatedGuard(): string
+    {
+        return config('laravel-multi-auth-impersonate.impersonated_guard');
     }
 
     public function getSessionGuardUsing(): string
@@ -191,9 +209,10 @@ class ImpersonateManager
     public function getTakeRedirectTo(): string
     {
         try {
-            $uri = Impersonate::takeRedirectTo();
+            $impersonator = $this->findUserById($this->getImpersonatedId(), $this->getImpersonatedGuardName());
+            $uri = $impersonator::takeRedirectTo();
         } catch (\InvalidArgumentException $e) {
-            $uri = Impersonate::takeRedirectTo();
+            $uri = $impersonator::takeRedirectTo();
         }
 
         return $uri;
@@ -202,9 +221,12 @@ class ImpersonateManager
     public function getLeaveRedirectTo(): string
     {
         try {
-            $uri = Impersonate::leaveRedirectTo();
+
+            $impersonator = $this->findUserById($this->getImpersonatorId(), $this->getImpersonatorGuardName());
+
+            $uri = $impersonator::leaveRedirectTo();
         } catch (\InvalidArgumentException $e) {
-            $uri = Impersonate::leaveRedirectTo();
+            $uri = $impersonator::leaveRedirectTo();
         }
 
         return $uri;
@@ -225,6 +247,9 @@ class ImpersonateManager
 
         return null;
     }
+
+
+
 
     protected function saveAuthCookieInSession(): void
     {
