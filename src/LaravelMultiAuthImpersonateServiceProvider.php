@@ -120,9 +120,9 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
 
         $router->macro('multiAuthImpersonate', function () use ($router) {
             $router->get('/multiAuthImpersonate/take/{id}/{guardName?}',
-                '\HashmatWaziri\LaravelMultiAuthImpersonate\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
+                '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
             $router->get('/multiAuthImpersonate/leave',
-                '\HashmatWaziri\LaravelMultiAuthImpersonate\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
+                '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
         });
 
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace HashmatWaziri\LaravelMultiAuthImpersonate\Controllers;
+namespace HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -87,7 +87,7 @@ class ImpersonateController extends Controller
         $leaveRedirect = $this->manager->getLeaveRedirectTo();
         $this->manager->leave();
 
-       
+
         if ($leaveRedirect !== 'back') {
             return redirect()->to($leaveRedirect);
         }
