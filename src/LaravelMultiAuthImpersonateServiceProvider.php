@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Commands\LaravelMultiAuthImpersonateCommand;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -116,13 +117,13 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
      */
     protected function registerRoutesMacro()
     {
-        $router = $this->app['router'];
 
-        $router->macro('multiAuthImpersonate', function (string $prefix) use ($router) {
-            $router->prefix($prefix)->group(function () use ($router) {
-                $router->get('/take/{id}/{guardName?}',
+
+        Route::macro('multiAuthImpersonate', function (string $prefix){
+            Route::prefix($prefix)->group(function ()  {
+                Route::get('/take/{id}/{guardName?}',
                     '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
-                $router->get('/leave',
+                Route::get('/leave',
                     '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
             });
 
