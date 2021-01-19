@@ -35,6 +35,7 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
         $this->registerAuthDriver();
 
     }
+
     /**
      * Bootstrap the application events.
      *
@@ -46,7 +47,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/' . $this->configName . '.php' => config_path($this->configName . '.php'),
             ], 'multiAuthImpersonate');
-
 
 
         }
@@ -118,11 +118,14 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
     {
         $router = $this->app['router'];
 
-        $router->macro('multiAuthImpersonate', function () use ($router) {
-            $router->get('/multiAuthImpersonate/take/{id}/{guardName?}',
-                '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
-            $router->get('/multiAuthImpersonate/leave',
-                '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
+        $router->macro('multiAuthImpersonate', function (string $prefix) use ($router) {
+            $router->prefix($prefix)->group(function () use ($router) {
+                $router->get('/take/{id}/{guardName?}',
+                    '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
+                $router->get('/leave',
+                    '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
+            });
+
         });
 
     }
@@ -156,6 +159,7 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
             return $guard;
         });
     }
+
     /**
      * Register plugin middleware.
      *

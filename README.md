@@ -67,18 +67,18 @@ example:
 
     public static function takeRedirectTo(){
 
-        return url('/after-login');
+        return url('/after-being-impersonated');
     }
 
 }
 ```
 
 
-**leave Redirect** : when an impersonator ( the one who impersonated or logged in as another user) is leaving the impersonation, you can add the method  `leaveRedirectTo()` to your model:
+**leave Redirect** : when an impersonator ( the one who impersonated or logged in as another user) is leaving the impersonation, you can add the method  `leaveRedirectTo()` to that model:
 
 example:
 ```php
-  class User extends Authenticatable implements MustVerifyEmail
+  class Employee extends Authenticatable implements MustVerifyEmail
 {
 
     use Notifiable,Impersonate;
@@ -87,7 +87,7 @@ example:
 
     public static function leaveRedirectTo(){
 
-        return url('/dashboard');
+        return url('/workplace/dashboard');
     }
 
 }
@@ -110,12 +110,13 @@ Auth::user()->leaveImpersonation();
 // You're now logged as your original user.
 ```
 
-### Using the built-in controller
+### Routes
 
-In your routes file, under web middleware, you must call the `impersonate` route macro.
+In your routes file, under web middleware, you must call the `multiAuthImpersonate` route macro with any route name you choose to be used for this package.
+This package let user decides on which package URL these routes should be registered
 
 ```php
-Route::impersonate();
+Route::multiAuthImpersonate('impersonation');
 ```
 
 Alternatively, you can execute this macro with your `RouteServiceProvider`.
@@ -126,9 +127,9 @@ namespace App\Providers;
 class RouteServiceProvider extends ServiceProvider
 {
     public function map() {
-	// here you can supply an array of guards ex ['web','employee','etc']
+	// here you can supply an array of guards ex ['web','employee','etc'] so that each can impersonate other
         Route::middleware('web')->group(function (Router $router) {
-            $router->multiAuthImpersonate();
+            $router->multiAuthImpersonate('impersonation');
         });
     }
 }
