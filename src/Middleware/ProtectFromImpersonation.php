@@ -3,8 +3,8 @@
 namespace HashmatWaziri\LaravelMultiAuthImpersonate\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Redirect;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
+use Illuminate\Support\Facades\Redirect;
 
 class ProtectFromImpersonation
 {

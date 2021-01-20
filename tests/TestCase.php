@@ -2,9 +2,9 @@
 
 namespace HashmatWaziri\LaravelMultiAuthImpersonate\Tests;
 
+use HashmatWaziri\LaravelMultiAuthImpersonate\LaravelMultiAuthImpersonateServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use HashmatWaziri\LaravelMultiAuthImpersonate\LaravelMultiAuthImpersonateServiceProvider;
 
 class TestCase extends Orchestra
 {

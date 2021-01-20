@@ -2,23 +2,20 @@
 
 namespace HashmatWaziri\LaravelMultiAuthImpersonate\Services;
 
-use Exception;
-use HashmatWaziri\LaravelMultiAuthImpersonate\Models\Impersonate;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Application;
-use Illuminate\Routing\Route;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Events\LeaveImpersonation;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Events\TakeImpersonation;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Exceptions\InvalidUserProvider;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Exceptions\MissingUserProvider;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
 
 class ImpersonateManager
 {
     const REMEMBER_PREFIX = 'remember_web';
 
-    /** @var Application $app */
+    /** @var Application */
     private $app;
 
     public function __construct(Application $app)
@@ -35,7 +32,6 @@ class ImpersonateManager
      */
     public function findUserById($id, $guardName = null)
     {
-
         if (empty($guardName)) {
             $guardName = $this->app['config']->get('auth.default.guard', 'web');
         }
@@ -53,7 +49,7 @@ class ImpersonateManager
             throw new InvalidUserProvider($guardName);
         }
 
-        if (!($modelInstance = $userProvider->retrieveById($id))) {
+        if (! ($modelInstance = $userProvider->retrieveById($id))) {
             $model = $this->app['config']->get("auth.providers.$providerName.model");
 
             throw (new ModelNotFoundException())->setModel(
@@ -132,9 +128,9 @@ class ImpersonateManager
 
 
             $this->app['auth']->guard($guardName)->quietLogin($to);
-
         } catch (\Exception $e) {
             unset($e);
+
             return false;
         }
 
@@ -150,19 +146,17 @@ class ImpersonateManager
 
             $impersonator = $this->findUserById($this->getImpersonatorId(), $this->getImpersonatorGuardName());
             // take for example, if an employee (guard) is impersonating another employee(guard), then do not logout else if an employee (guard) is impersonating any other guard, then logout the user
-            if(!($this->getImpersonatorGuardName() == $this->getImpersonatorGuardUsingName())){
-
+            if (! ($this->getImpersonatorGuardName() == $this->getImpersonatorGuardUsingName())) {
                 $this->app['auth']->guard($this->getImpersonatorGuardUsingName())->quietLogout();
-
             }
             $this->app['auth']->guard($this->getImpersonatorGuardName())->quietLogin($impersonator);
 
             $this->extractAuthCookieFromSession();
 
             $this->clear();
-
         } catch (\Exception $e) {
             unset($e);
+
             return false;
         }
 
@@ -183,6 +177,7 @@ class ImpersonateManager
     {
         return config('laravel-multi-auth-impersonate.session_key');
     }
+
     public function getImpersonatedId(): string
     {
         // return impersonated_id
@@ -193,6 +188,7 @@ class ImpersonateManager
     {
         return config('laravel-multi-auth-impersonate.session_guard');
     }
+
     public function getImpersonatedGuard(): string
     {
         return config('laravel-multi-auth-impersonate.impersonated_guard');
@@ -210,10 +206,7 @@ class ImpersonateManager
 
     public function getTakeRedirectTo($userToImpersonate): string
     {
-
-
         try {
-
             $uri = $userToImpersonate::takeRedirectTo();
         } catch (\InvalidArgumentException $e) {
             $uri = $userToImpersonate::takeRedirectTo();
@@ -225,12 +218,10 @@ class ImpersonateManager
     public function getLeaveRedirectTo(): string
     {
         try {
-
             $impersonator = $this->findUserById($this->getImpersonatorId(), $this->getImpersonatorGuardName());
 
 
             $uri = $impersonator::leaveRedirectTo();
-
         } catch (\InvalidArgumentException $e) {
             $uri = $impersonator::leaveRedirectTo();
         }
@@ -254,16 +245,13 @@ class ImpersonateManager
         return null;
     }
 
-
-
-
     protected function saveAuthCookieInSession(): void
     {
         $cookie = $this->findByKeyInArray($this->app['request']->cookies->all(), static::REMEMBER_PREFIX);
         $key = $cookie->keys()->first();
         $val = $cookie->values()->first();
 
-        if (!$key || !$val) {
+        if (! $key || ! $val) {
             return;
         }
 
@@ -275,7 +263,7 @@ class ImpersonateManager
 
     protected function extractAuthCookieFromSession(): void
     {
-        if (!$session = $this->findByKeyInArray(session()->all(), static::REMEMBER_PREFIX)->first()) {
+        if (! $session = $this->findByKeyInArray(session()->all(), static::REMEMBER_PREFIX)->first()) {
             return;
         }
 
