@@ -1,7 +1,8 @@
 # laravel-multi-auth-impersonate
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/HashmatWaziri/laravel-multi-auth-impersonate.svg?style=flat-square)](https://packagist.org/packages/HashmatWaziri/laravel-multi-auth-impersonate)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/HashmatWaziri/laravel-multi-auth-impersonate/run-tests?label=tests)](https://github.com/HashmatWaziri/laravel-multi-auth-impersonate/actions?query=workflow%3ATests+branch%3Amaster)
+
+[comment]: <> ([![GitHub Tests Action Status]&#40;https://img.shields.io/github/workflow/status/HashmatWaziri/laravel-multi-auth-impersonate/run-tests?label=tests&#41;]&#40;https://github.com/HashmatWaziri/laravel-multi-auth-impersonate/actions?query=workflow%3ATests+branch%3Amaster&#41;)
 [![Total Downloads](https://img.shields.io/packagist/dt/HashmatWaziri/laravel-multi-auth-impersonate.svg?style=flat-square)](https://packagist.org/packages/HashmatWaziri/laravel-multi-auth-impersonate)
 
 
