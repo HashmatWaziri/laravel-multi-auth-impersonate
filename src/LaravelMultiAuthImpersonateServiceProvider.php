@@ -14,8 +14,9 @@ use HashmatWaziri\LaravelMultiAuthImpersonate\Commands\LaravelMultiAuthImpersona
 use Illuminate\View\Compilers\BladeCompiler;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Middleware\ProtectFromImpersonation;
+use Illuminate\Contracts\Support\DeferrableProvider;
 
-class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
+class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /** @var string $configName */
     protected $configName = 'laravel-multi-auth-impersonate';
@@ -199,4 +200,11 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
 
         $this->publishes([$configPath => config_path($this->configName . '.php')], 'impersonate');
     }
+
+
+    public function provides()
+    {
+        return [ImpersonateManager::class];
+    }
+
 }
