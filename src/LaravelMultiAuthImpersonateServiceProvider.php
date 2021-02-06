@@ -2,24 +2,23 @@
 
 namespace HashmatWaziri\LaravelMultiAuthImpersonate;
 
-use Illuminate\Auth\AuthManager;
+use HashmatWaziri\LaravelMultiAuthImpersonate\Commands\LaravelMultiAuthImpersonateCommand;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Guard\SessionGuard;
+use HashmatWaziri\LaravelMultiAuthImpersonate\Middleware\ProtectFromImpersonation;
+use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use HashmatWaziri\LaravelMultiAuthImpersonate\Commands\LaravelMultiAuthImpersonateCommand;
 use Illuminate\View\Compilers\BladeCompiler;
-use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
-use HashmatWaziri\LaravelMultiAuthImpersonate\Middleware\ProtectFromImpersonation;
 
 class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
 {
-    /** @var string $configName */
+    /** @var string */
     protected $configName = 'laravel-multi-auth-impersonate';
-
 
     public function register()
     {
@@ -34,7 +33,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
         $this->registerBladeDirectives();
         $this->registerMiddleware();
         $this->registerAuthDriver();
-
     }
 
     /**
@@ -48,8 +46,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/' . $this->configName . '.php' => config_path($this->configName . '.php'),
             ], 'multiAuthImpersonate');
-
-
         }
 
 
@@ -67,7 +63,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
         $this->commands([
             LaravelMultiAuthImpersonateCommand::class,
         ]);
-
     }
 
     /**
@@ -106,7 +101,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
                 return '<?php endif; ?>';
             });
         });
-
     }
 
     /**
@@ -117,18 +111,18 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
      */
     protected function registerRoutesMacro()
     {
-
-
-        Route::macro('multiAuthImpersonate', function (string $prefix){
-            Route::prefix($prefix)->group(function ()  {
-                Route::get('/take/{id}/{guardName}',
-                    '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take')->name('multiAuthImpersonate');
-                Route::get('/leave',
-                    '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@leave')->name('multiAuthImpersonate.leave');
+        Route::macro('multiAuthImpersonate', function (string $prefix) {
+            Route::prefix($prefix)->group(function () {
+                Route::get(
+                    '/take/{id}/{guardName}',
+                    '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take'
+                )->name('multiAuthImpersonate');
+                Route::get(
+                    '/leave',
+                    '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@leave'
+                )->name('multiAuthImpersonate.leave');
             });
-
         });
-
     }
 
     /**
@@ -170,7 +164,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
     public function registerMiddleware()
     {
         $this->app['router']->aliasMiddleware('impersonate.protect', ProtectFromImpersonation::class);
-
     }
 
     /**
@@ -185,7 +178,6 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom($configPath, $this->configName);
     }
-
 
     /**
      * Publish config file.
