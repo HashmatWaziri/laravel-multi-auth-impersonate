@@ -2,10 +2,10 @@
 
 namespace HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers;
 
+use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
 
 class ImpersonateController extends Controller
 {
@@ -18,10 +18,9 @@ class ImpersonateController extends Controller
     public function __construct()
     {
         $this->manager = app()->make(ImpersonateManager::class);
-        session()->remove('guardName' );
-        if(\request()->routeIs('impersonate')){
+        session()->remove('guardName');
+        if (\request()->routeIs('impersonate')) {
             session()->put(['guardName' => request()->guardName]);
-
         }
     }
 
@@ -50,8 +49,7 @@ class ImpersonateController extends Controller
 
 
 
-        if (!$request->user($this->manager->getCurrentAuthGuardName())->canImpersonate()) {
-
+        if (! $request->user($this->manager->getCurrentAuthGuardName())->canImpersonate()) {
             abort(403);
         }
 
@@ -60,7 +58,6 @@ class ImpersonateController extends Controller
 
 
         if ($userToImpersonate->canBeImpersonated()) {
-
             if ($this->manager->take($request->user($this->manager->getCurrentAuthGuardName()), $userToImpersonate, $guardName)) {
                 $takeRedirect = $this->manager->getTakeRedirectTo($userToImpersonate);
 
@@ -78,9 +75,7 @@ class ImpersonateController extends Controller
      */
     public function leave()
     {
-
-
-        if (!$this->manager->isImpersonating()) {
+        if (! $this->manager->isImpersonating()) {
             abort(403);
         }
 
@@ -91,6 +86,7 @@ class ImpersonateController extends Controller
         if ($leaveRedirect !== 'back') {
             return redirect()->to($leaveRedirect);
         }
+
         return redirect()->back();
     }
 }

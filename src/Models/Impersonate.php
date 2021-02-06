@@ -2,8 +2,8 @@
 
 namespace HashmatWaziri\LaravelMultiAuthImpersonate\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use HashmatWaziri\LaravelMultiAuthImpersonate\Services\ImpersonateManager;
+use Illuminate\Database\Eloquent\Model;
 
 trait Impersonate
 {
@@ -71,21 +71,17 @@ trait Impersonate
      *
      *
      */
-
-    public static function takeRedirectTo(){
-
+    public static function takeRedirectTo()
+    {
         return url('/');
     }
-
 
     /**
      * The URI to redirect after leaving an impersonation.
      *
      */
-    public static function leaveRedirectTo(){
-
+    public static function leaveRedirectTo()
+    {
         return url('/');
     }
-
-
 }
