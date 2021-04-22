@@ -114,7 +114,7 @@ class LaravelMultiAuthImpersonateServiceProvider extends ServiceProvider
         Route::macro('multiAuthImpersonate', function (string $prefix) {
             Route::prefix($prefix)->group(function () {
                 Route::get(
-                    '/take/{id}/{guardName}',
+                    '/take/{id?}/{guardName?}',
                     '\HashmatWaziri\LaravelMultiAuthImpersonate\Http\Controllers\ImpersonateController@take'
                 )->name('multiAuthImpersonate');
                 Route::get(
